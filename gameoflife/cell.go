@@ -1,5 +1,11 @@
 package gameoflife
 
+import (
+	"image/color"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
+
 type CellStatus int32
 
 const (
@@ -24,6 +30,14 @@ func (c *Cell) ShouldLive() bool {
 
 func (c *Cell) IsAlive() bool {
 	return c.Status == Alive
+}
+
+func (c *Cell) Fill(size int32, color color.RGBA) {
+	rl.DrawRectangle(c.Col*size, c.Row*size, size, size, color)
+}
+
+func (c *Cell) Outline(size int32, color color.RGBA) {
+	rl.DrawRectangleLines(c.Col*size, c.Row*size, size, size, color)
 }
 
 func (c *Cell) Update(grid *Grid) CellStatus {

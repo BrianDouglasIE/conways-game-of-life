@@ -32,11 +32,11 @@ func (g *Grid) Update() {
 }
 
 func (g *Grid) Draw(cellSize int32) {
-	g.walkCells(func(grid *Grid, cell *Cell) {
+	g.WalkCells(func(grid *Grid, cell *Cell) {
 		if cell.IsAlive() {
-			rl.DrawRectangle(cellSize*cell.Col, cellSize*cell.Row, cellSize, cellSize, rl.RayWhite)
+			cell.Fill(cellSize, rl.White)
 		}
-		rl.DrawRectangleLines(cellSize*cell.Col, cellSize*cell.Row, cellSize, cellSize, rl.Gray)
+		cell.Outline(cellSize, rl.Gray)
 	})
 }
 
@@ -48,7 +48,7 @@ func (g *Grid) CellAt(row int32, col int32) (*Cell, error) {
 	return &g.Cells[row][col], nil
 }
 
-func (g *Grid) walkCells(callback func(grid *Grid, cell *Cell)) {
+func (g *Grid) WalkCells(callback func(grid *Grid, cell *Cell)) {
 	for rowIndex, row := range g.Cells {
 		for colIndex := range row {
 			callback(g, &g.Cells[rowIndex][colIndex])

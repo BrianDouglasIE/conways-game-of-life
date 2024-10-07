@@ -9,9 +9,9 @@ import (
 const (
 	SCREEN_WIDTH  = 800
 	SCREEN_HEIGHT = 800
-	COLS          = 5
-	ROWS          = 5
-	CELL_SIZE     = 160
+	COLS          = 16
+	ROWS          = 16
+	CELL_SIZE     = SCREEN_WIDTH / COLS
 )
 
 func main() {
@@ -25,19 +25,31 @@ func main() {
 		initialCells[rowIndex] = make([]gameoflife.Cell, COLS)
 
 		for colIndex := int32(0); colIndex < COLS; colIndex++ {
-			status := gameoflife.Dead
-			if rowIndex == 1 && colIndex == 2 ||
-				rowIndex == 2 && colIndex == 2 ||
-				rowIndex == 3 && colIndex == 2 {
-				status = gameoflife.Alive
-			}
-			initialCells[rowIndex][colIndex] = gameoflife.Cell{Row: rowIndex, Col: colIndex, Status: status}
+			initialCells[rowIndex][colIndex] = gameoflife.Cell{Row: rowIndex, Col: colIndex, Status: gameoflife.Dead}
 		}
 	}
 
 	grid := gameoflife.Grid{Rows: ROWS, Cols: COLS, Cells: initialCells}
 
 	for !rl.WindowShouldClose() {
+		mousePoint := rl.GetMousePosition()
+		grid.WalkCells(func(grid *gameoflife.Grid, cell *gameoflife.Cell) {
+			cellRect := rl.Rectangle{Width: CELL_SIZE, Height: CELL_SIZE, X: float32(cell.Col) * CELL_SIZE, Y: float32(cell.Row) * CELL_SIZE}
+			if rl.CheckCollisionPointRec(mousePoint, cellRect) {
+				if cell.Status == gameoflife.Dead {
+					cell.Fill(CELL_SIZE, rl.Green)
+				}
+
+				if rl.IsMouseButtonPressed(rl.MouseLeftButton) {
+					if cell.Status == gameoflife.Alive {
+						cell.Status = gameoflife.Dead
+					} else if cell.Status == gameoflife.Dead {
+						cell.Status = gameoflife.Alive
+					}
+				}
+			}
+		})
+
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
 
