@@ -23,3 +23,10 @@ const (
 	CELL_SIZE     = SCREEN_WIDTH / COLS
 )
 ```
+
+## Demo
+
+
+
+https://github.com/user-attachments/assets/6b050f8c-497f-4240-8d94-195038db9a21
+
